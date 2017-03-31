@@ -257,7 +257,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				}
 			} catch (OAuthSystemException e) {
 				throw new AuthenticationFailedException(
-						"Exception while building a request for requesting the " + "access token", e);
+						"Exception while building a request for requesting the access token", e);
 			}
 		} catch (OAuthProblemException e) {
 			throw new AuthenticationFailedException("Authentication Failed in OAuthClientResponse", e);
