@@ -49,7 +49,7 @@ public class PinterestAuthenticatorServiceComponent {
                 log.debug("Pinterest authenticator is activated");
             }
         } catch (Throwable e) {
-            log.fatal("Error while activating the Instagram authenticator", e);
+            log.fatal("Error while activating the Pinterest authenticator", e);
         }
     }
 
