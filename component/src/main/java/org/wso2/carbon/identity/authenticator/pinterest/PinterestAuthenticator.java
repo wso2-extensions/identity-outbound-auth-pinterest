@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Authenticator of pinterest
+ * Authenticator of Pinterest
  */
 public class PinterestAuthenticator extends OpenIDConnectAuthenticator implements FederatedApplicationAuthenticator {
 
@@ -68,15 +68,15 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	@Override
 	public boolean canHandle(HttpServletRequest request) {
 		if (log.isDebugEnabled()) {
-			log.debug("Inside PinterestOAuth2Authenticator.canHandle() and checking whether the code and state are" +
-			          " present");
+			log.debug("Inside PinterestOAuth2Authenticator canHandle method and checking whether the code and state " +
+			          "exist");
 		}
 		return request.getParameter(PinterestAuthenticatorConstants.OAUTH2_GRANT_TYPE_CODE) != null &&
 		       request.getParameter(PinterestAuthenticatorConstants.OAUTH2_PARAM_STATE) != null;
 	}
 
 	/**
-	 * Get pinterest authorization endpoint.
+	 * Get Pinterest authorization endpoint.
 	 */
 	@Override
 	protected String getAuthorizationServerEndpoint(Map<String, String> authenticatorProperties) {
@@ -84,7 +84,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	}
 
 	/**
-	 * Get pinterest token endpoint.
+	 * Get Pinterest token endpoint.
 	 */
 	@Override
 	protected String getTokenEndpoint(Map<String, String> authenticatorProperties) {
@@ -92,7 +92,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	}
 
 	/**
-	 * Get pinterest user info endpoint.
+	 * Get Pinterest user info endpoint.
 	 */
 	@Override
 	protected String getUserInfoEndpoint(OAuthClientResponse token, Map<String, String> authenticatorProperties) {
@@ -100,7 +100,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	}
 
 	/**
-	 * Check ID token in pinterest OAuth.
+	 * Check ID token in Pinterest OAuth.
 	 */
 	@Override
 	protected boolean requiredIDToken(Map<String, String> authenticatorProperties) {
@@ -235,25 +235,20 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				AuthenticatedUser authenticatedUserObj;
 				String accessToken = oAuthResponse.getParam(PinterestAuthenticatorConstants.ACCESS_TOKEN);
 				if (StringUtils.isNotEmpty(accessToken)) {
-					Map<ClaimMapping, String> claims = getSubjectAttributes(oAuthResponse, authenticatorProperties);
+					Map<ClaimMapping, String> claims = buildClaims(oAuthResponse, authenticatorProperties);
 					if (claims != null && !claims.isEmpty()) {
-						String userIDURI = PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
-						                   PinterestAuthenticatorConstants.FORWARD_SLASH +
-						                   PinterestAuthenticatorConstants.USER_ID;
-						String fistNameURI = PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
-						                     PinterestAuthenticatorConstants.FORWARD_SLASH +
-						                     PinterestAuthenticatorConstants.FIRST_NAME;
+						String userId = PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
+						                PinterestAuthenticatorConstants.FORWARD_SLASH +
+						                PinterestAuthenticatorConstants.USER_ID;
 						authenticatedUserObj = AuthenticatedUser.createFederateAuthenticatedUserFromSubjectIdentifier(
-								String.valueOf(claims.get(ClaimMapping.build(fistNameURI, fistNameURI, null, false))));
-						authenticatedUserObj.setAuthenticatedSubjectIdentifier(
-								String.valueOf(claims.get(ClaimMapping.build(userIDURI, userIDURI, null, false))));
+								String.valueOf(claims.get(ClaimMapping.build(userId, userId, null, false))));
 						authenticatedUserObj.setUserAttributes(claims);
 						context.setSubject(authenticatedUserObj);
 					} else {
 						throw new AuthenticationFailedException("Selected user profile not found");
 					}
 				} else {
-					throw new AuthenticationFailedException("Authentication Failed access token not available");
+					throw new AuthenticationFailedException("Authentication Failed, access token not available");
 				}
 			} catch (OAuthSystemException e) {
 				throw new AuthenticationFailedException(
@@ -270,7 +265,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	 * @param url         user info endpoint.
 	 * @param accessToken access token.
 	 */
-	protected String sendRequest(String url, String accessToken) {
+	protected String getUserInfo(String url, String accessToken) throws AuthenticationFailedException {
 		if (log.isDebugEnabled()) {
 			log.debug("Sending the request for getting the user info");
 		}
@@ -283,14 +278,12 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			                  accessToken);
 			URLConnection connection = obj.openConnection();
 			// Cast to a HttpURLConnection
-			if (connection instanceof HttpURLConnection)
-			{
+			if (connection instanceof HttpURLConnection) {
 				httpConnection = (HttpURLConnection) connection;
 				httpConnection.setRequestMethod(PinterestAuthenticatorConstants.HTTP_GET_METHOD);
 				bufferedReader = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
-			}
-			else {
-				throw new ProtocolException("Error while casting the HttpURLConnection");
+			} else {
+				throw new AuthenticationFailedException("Exception while casting the HttpURLConnection");
 			}
 			String inputLine = bufferedReader.readLine();
 			while (inputLine != null) {
@@ -299,23 +292,22 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			}
 
 		} catch (MalformedURLException e) {
-			log.error("Error while generating the user info URL", e);
+			throw new AuthenticationFailedException("Exception while generating the user info URL", e);
 		} catch (ProtocolException e) {
-			log.error("Error while setting the request method", e);
+			throw new AuthenticationFailedException("Exception while setting the request method", e);
 		} catch (IOException e) {
-			log.error("Error while reading the response", e);
-		}  finally {
+			throw new AuthenticationFailedException("Exception while reading the response", e);
+		} finally {
 			if (bufferedReader != null) {
 				try {
 					bufferedReader.close();
 				} catch (IOException e) {
-					log.error("Error while closing the bufferedReader", e);
+					log.error("Exception while closing the bufferedReader", e);
 				}
 			}
 			if (httpConnection != null) {
 				httpConnection.disconnect();
 			}
-
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Receiving the response for the User info: " + stringBuilder.toString());
@@ -333,34 +325,44 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 		return PinterestAuthenticatorConstants.CLAIM_DIALECT_URI;
 	}
 
-	@Override
-	protected Map<ClaimMapping, String> getSubjectAttributes(OAuthClientResponse token,
-	                                                         Map<String, String> authenticatorProperties) {
+	/**
+	 * @param token                   token
+	 * @param authenticatorProperties authenticatorProperties
+	 * @return claims
+	 */
+	protected Map<ClaimMapping, String> buildClaims(OAuthClientResponse token,
+	                                                Map<String, String> authenticatorProperties)
+			throws AuthenticationFailedException {
 		Map<ClaimMapping, String> claims = new HashMap<>();
 		String accessToken = token.getParam("access_token");
-		String url = this.getUserInfoEndpoint(token, authenticatorProperties);
+		String url = getUserInfoEndpoint(token, authenticatorProperties);
 		String json;
-		json = this.sendRequest(url, accessToken);
-		if (StringUtils.isBlank(json)) {
-			if (log.isDebugEnabled()) {
-				log.debug("Unable to fetch user claims. Proceeding without user claims");
+		try {
+			json = getUserInfo(url, accessToken);
+
+			if (StringUtils.isBlank(json)) {
+				if (log.isDebugEnabled()) {
+					log.debug("Unable to fetch user claims. Proceeding without user claims");
+				}
+				return claims;
 			}
-			return claims;
-		}
-		JSONObject obj = new JSONObject(json);
-		String userData = obj.getJSONObject(PinterestAuthenticatorConstants.ROOT_ELEMENT).toString();
-		Map<String, Object> jsonObject = JSONUtils.parseJSON(userData);
-		for (Map.Entry<String, Object> data : jsonObject.entrySet()) {
-			String key = data.getKey();
-			claims.put(ClaimMapping.build(PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
-			                              PinterestAuthenticatorConstants.FORWARD_SLASH + key,
-			                              PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
-			                              PinterestAuthenticatorConstants.FORWARD_SLASH + key, null, false),
-			           jsonObject.get(key).toString());
-			if (log.isDebugEnabled()) {
-				log.debug(
-						"Adding claims from end-point data mapping : " + key + " - " + jsonObject.get(key).toString());
+			JSONObject obj = new JSONObject(json);
+			String userData = obj.getJSONObject(PinterestAuthenticatorConstants.ROOT_ELEMENT).toString();
+			Map<String, Object> jsonObject = JSONUtils.parseJSON(userData);
+			for (Map.Entry<String, Object> data : jsonObject.entrySet()) {
+				String key = data.getKey();
+				claims.put(ClaimMapping.build(PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
+				                              PinterestAuthenticatorConstants.FORWARD_SLASH + key,
+				                              PinterestAuthenticatorConstants.CLAIM_DIALECT_URI +
+				                              PinterestAuthenticatorConstants.FORWARD_SLASH + key, null, false),
+				           jsonObject.get(key).toString());
+				if (log.isDebugEnabled()) {
+					log.debug("Adding claims from end-point data mapping : " + key + " - " +
+					          jsonObject.get(key).toString());
+				}
 			}
+		} catch (AuthenticationFailedException e) {
+			throw new AuthenticationFailedException("Exception while fetching the user claims", e);
 		}
 		return claims;
 	}
