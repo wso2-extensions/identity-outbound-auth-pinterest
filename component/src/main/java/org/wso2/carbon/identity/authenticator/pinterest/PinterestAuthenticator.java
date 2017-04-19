@@ -185,7 +185,8 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				                                 .setRedirectURI(callbackurl)
 				                                 .setScope(PinterestAuthenticatorConstants.PINTEREST_BASIC_SCOPE)
 				                                 .setResponseType(
-						                                 PinterestAuthenticatorConstants.OAUTH2_GRANT_TYPE_CODE).setState(state).buildQueryMessage();
+						                                 PinterestAuthenticatorConstants.OAUTH2_GRANT_TYPE_CODE)
+				                                 .setState(state).buildQueryMessage();
 				String loginPage = authzRequest.getLocationUri();
 				response.sendRedirect(loginPage);
 			} else {
