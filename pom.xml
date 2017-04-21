@@ -134,14 +134,14 @@
             <version>${wso2.json}</version>
         </dependency>
     </dependencies>
-    <!--<scm>
+    <scm>
         <connection>scm:git:https://github.com/wso2-extensions/identity-outbound-auth-pinterest.git</connection>
         <url>https://github.com/wso2-extensions/identity-outbound-auth-pinterest.git</url>
         <developerConnection>
             scm:git:https://github.com/wso2-extensions/identity-outbound-auth-pinterest.git
         </developerConnection>
         <tag>HEAD</tag>
-    </scm>-->
+    </scm>
     <build>
         <extensions>
             <extension>
