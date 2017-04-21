@@ -151,7 +151,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 		Property callbackUrl = new Property();
 		callbackUrl.setDisplayName("Callback URL");
 		callbackUrl.setName(PinterestAuthenticatorConstants.CALLBACK_URL);
-		callbackUrl.setDescription("Enter value corresponding to callback URL.");
+		callbackUrl.setDescription("Enter value corresponding to callback URL");
 		callbackUrl.setRequired(true);
 		callbackUrl.setDisplayOrder(2);
 		configProperties.add(callbackUrl);

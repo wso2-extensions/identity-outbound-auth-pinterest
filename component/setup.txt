@@ -7,7 +7,7 @@ Pre-requisites:
 Tested Platform: 
 
 - UBUNTU 14.04
-- WSO2 IS 5.1.0
+- WSO2 IS 5.3.0
 - Java 1.7
 
 Do the following:
