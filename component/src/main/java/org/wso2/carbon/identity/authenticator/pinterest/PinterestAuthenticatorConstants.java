@@ -20,6 +20,13 @@
 package org.wso2.carbon.identity.authenticator.pinterest;
 
 public class PinterestAuthenticatorConstants {
+
+	/*
+	 * Private Constructor will prevent the instantiation of this class directly
+	 */
+	private PinterestAuthenticatorConstants() {
+	}
+
 	//Pinterest authorize endpoint URL.
 	public static final String PINTEREST_OAUTH_ENDPOINT = "https://api.pinterest.com/oauth/";
 	//office365 token  endpoint URL.
@@ -42,8 +49,6 @@ public class PinterestAuthenticatorConstants {
 	public static final String CLIENT_SECRET = "Client Secret";
 	//The reply URL of the application.
 	public static final String CALLBACK_URL = "callbackUrl";
-	//The user first name.
-	public static final String FIRST_NAME = "first_name";
 	//The ID of the user.
 	public static final String USER_ID = "id";
 	//The claim dialect uri.
@@ -54,10 +59,8 @@ public class PinterestAuthenticatorConstants {
 	public static final String HTTP_GET_METHOD = "GET";
 	//Root element of the json response
 	public static final String ROOT_ELEMENT = "data";
-	//Constant for Equal
-	public static final String EQUAL = "=";
-	//Constant for Forward Slash
-	public static final String FORWARD_SLASH = "/";
-	//Constant for Question Mark
-	public static final String QUESTION_MARK = "?";
+	//Constant for connection time out
+	public static final int CONNECTION_TIMEOUT_VALUE = 15000;
+	//Constant for read time out
+	public static final int READ_TIMEOUT_VALUE = 15000;
 }

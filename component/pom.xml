@@ -57,14 +57,21 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>org.wso2.carbon.identity.authenticator.pinterest.internal</Private-Package>
                         <Import-Package>
-                            org.apache.commons.logging.*; version="1.0.4",
+                            org.apache.commons.logging.*;version="${commons-logging.osgi.version.range}",
                             org.osgi.framework,
                             org.wso2.carbon.identity.application.authentication.framework.*,
                             javax.servlet,
                             javax.servlet.http,
-                            org.apache.oltu.oauth2.*;
-                            version="${oltu.package.import.version.range}",
-                            *;resolution:=optional
+                            org.apache.oltu.oauth2.*;version="${oltu.package.import.version.range}",
+                            org.json;version="${org.json}",
+                            org.apache.commons.lang;version="${commons-lang.osgi.version.range}",
+                            org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.authenticator.oidc;
+                            version="${identity.outbound.auth.oidc.import.version.range}",,
+                            org.wso2.carbon.identity.core.util;
+                            version="${carbon.identity.framework.import.version.range}",
+                            org.wso2.carbon.identity.application.common.model;
+                            version="${carbon.identity.framework.import.version.range}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.identity.authenticator.pinterest.internal,

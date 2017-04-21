@@ -35,26 +35,22 @@ public class PinterestAuthenticatorServiceComponent {
     private static Log log = LogFactory.getLog(PinterestAuthenticatorServiceComponent.class);
 
     /**
-     * activate custom authenticator.
+     * This method is to register the Pinterest authenticator service.
      *
      * @param componentContext the Component Context
      */
     protected void activate(ComponentContext componentContext) {
-        try {
-            PinterestAuthenticator authenticator = new PinterestAuthenticator();
-            Hashtable<String, String> props = new Hashtable<>();
-            componentContext.getBundleContext().registerService(ApplicationAuthenticator.class.getName(), authenticator,
-                                                                props);
-            if (log.isDebugEnabled()) {
-                log.debug("Pinterest authenticator is activated");
-            }
-        } catch (Throwable e) {
-            log.fatal("Error while activating the Pinterest authenticator", e);
+        PinterestAuthenticator authenticator = new PinterestAuthenticator();
+        Hashtable<String, String> props = new Hashtable<>();
+        componentContext.getBundleContext().registerService(ApplicationAuthenticator.class.getName(), authenticator,
+                                                            props);
+        if (log.isDebugEnabled()) {
+            log.debug("Pinterest authenticator is activated");
         }
     }
 
     /**
-     * deactivate custom authenticator.
+     * This method is to deactivate the Pinterest authenticator the service.
      *
      * @param componentContext the Component Context
      */
