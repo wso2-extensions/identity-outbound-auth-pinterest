@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.pinterest</groupId>
         <artifactId>identity-outbound-auth-pinterest</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>org.wso2.carbon.extension.identity.authenticator.pinterest.feature</artifactId>
     <packaging>pom</packaging>
