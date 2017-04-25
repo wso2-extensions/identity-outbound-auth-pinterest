@@ -191,9 +191,9 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				                                        "AuthenticationContext is null");
 			}
 		} catch (IOException e) {
-			throw new AuthenticationFailedException("Error while sending the redirect response to the client", e);
+			throw new AuthenticationFailedException("Exception while sending the redirect response to the client", e);
 		} catch (OAuthSystemException e) {
-			throw new AuthenticationFailedException("Error while generating the OAuthClientRequest", e);
+			throw new AuthenticationFailedException("Exception while building the request", e);
 		}
 	}
 
@@ -247,16 +247,15 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 						                                        accessToken);
 					}
 				} else {
-					throw new AuthenticationFailedException("Authentication Failed, access token is not available");
+					throw new AuthenticationFailedException("Could not receive a valid access token from Pinterest");
 				}
 			} catch (OAuthSystemException e) {
-				throw new AuthenticationFailedException(
-						"Exception while building a request to get the access token", e);
+				throw new AuthenticationFailedException("Exception while building access token request", e);
 			} catch (ApplicationAuthenticatorException e) {
-				throw new AuthenticationFailedException("Error while building the claim mapping", e);
+				throw new AuthenticationFailedException("Exception while building the claim mapping", e);
 			}
 		} catch (OAuthProblemException e) {
-			throw new AuthenticationFailedException("Authentication Failed in OAuthClientResponse", e);
+			throw new AuthenticationFailedException("Exception while getting the access token form the response", e);
 		}
 	}
 
@@ -272,7 +271,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 		if (log.isDebugEnabled()) {
 			log.debug("Sending the request for getting the user info");
 		}
-		StringBuilder stringBuilder = new StringBuilder();
+		StringBuilder jsonResponseCollector = new StringBuilder();
 		BufferedReader bufferedReader = null;
 		HttpURLConnection httpConnection = null;
 		JSONObject jsonObj = null;
@@ -291,16 +290,17 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			}
 			String inputLine = bufferedReader.readLine();
 			while (inputLine != null) {
-				stringBuilder.append(inputLine).append("\n");
+				jsonResponseCollector.append(inputLine).append("\n");
 				inputLine = bufferedReader.readLine();
 			}
-			jsonObj = new JSONObject(stringBuilder.toString());
+			jsonObj = new JSONObject(jsonResponseCollector.toString());
 		} catch (MalformedURLException e) {
 			throw new ApplicationAuthenticatorException("MalformedURLException while generating the user info URL: "
 			                                            + url, e);
 		} catch (ProtocolException e) {
 			throw new ApplicationAuthenticatorException("ProtocolException while setting the request method: " +
-			                                            PinterestAuthenticatorConstants.HTTP_GET_METHOD, e);
+			                                            PinterestAuthenticatorConstants.HTTP_GET_METHOD +
+			                                            " for the URL: " + url, e);
 		} catch (IOException e) {
 			throw new ApplicationAuthenticatorException("IOException while reading the response from " + url, e);
 		} finally {
@@ -310,7 +310,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			}
 		}
 		if (log.isDebugEnabled()) {
-			log.debug("Receiving the response for the User info: " + stringBuilder.toString());
+			log.debug("Receiving the response for the User info: " + jsonResponseCollector.toString());
 		}
 		return jsonObj;
 	}
