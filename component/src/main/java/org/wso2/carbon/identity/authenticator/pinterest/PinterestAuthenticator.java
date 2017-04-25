@@ -302,7 +302,8 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			                                            PinterestAuthenticatorConstants.HTTP_GET_METHOD +
 			                                            " for the URL: " + url, e);
 		} catch (IOException e) {
-			throw new ApplicationAuthenticatorException("IOException while reading the response from " + url, e);
+			throw new ApplicationAuthenticatorException("Error when reading the response from " + url +
+			                                            "to update user claims", e);
 		} finally {
 			IdentityIOStreamUtils.closeReader(bufferedReader);
 			if (httpConnection != null) {
