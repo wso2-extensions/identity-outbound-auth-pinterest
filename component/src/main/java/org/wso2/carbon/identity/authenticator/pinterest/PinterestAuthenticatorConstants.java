@@ -19,6 +19,10 @@
 
 package org.wso2.carbon.identity.authenticator.pinterest;
 
+/*
+ * Define all constants used for Pinterest Authenticator.
+ * @since 1.0.0
+ */
 public class PinterestAuthenticatorConstants {
 
 	/*
