@@ -30,12 +30,12 @@ import org.apache.oltu.oauth2.client.response.OAuthClientResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
-import org.apache.oltu.oauth2.common.utils.JSONUtils;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.application.authentication.framework.FederatedApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.ApplicationAuthenticatorException;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
+import org.wso2.carbon.identity.application.authentication.framework.exception.InvalidCredentialsException;
 import org.wso2.carbon.identity.application.authentication.framework.model.AuthenticatedUser;
 import org.wso2.carbon.identity.application.authentication.framework.util.FrameworkUtils;
 import org.wso2.carbon.identity.application.authenticator.oidc.OIDCAuthenticatorConstants;
@@ -45,13 +45,21 @@ import org.wso2.carbon.identity.application.common.model.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
-import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Authenticator of Pinterest
@@ -72,8 +80,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			log.debug("Inside PinterestOAuth2Authenticator canHandle method and checking whether the code and state " +
 			          "exist");
 		}
-		return request.getParameter(PinterestAuthenticatorConstants.OAUTH2_GRANT_TYPE_CODE) != null &&
-		       request.getParameter(PinterestAuthenticatorConstants.OAUTH2_PARAM_STATE) != null;
+		return request.getParameter(PinterestAuthenticatorConstants.OAUTH2_PARAM_STATE) != null;
 	}
 
 	/**
@@ -217,6 +224,9 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	protected void processAuthenticationResponse(HttpServletRequest request, HttpServletResponse response,
 	                                             AuthenticationContext context) throws AuthenticationFailedException {
 		try {
+			if (request.getParameter(PinterestAuthenticatorConstants.OAUTH2_GRANT_TYPE_CODE) == null) {
+				handleErrorResponse(request);
+			}
 			Map<String, String> authenticatorProperties = context.getAuthenticatorProperties();
 			String clientId = authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_ID);
 			String clientSecret = authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_SECRET);
@@ -230,7 +240,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 						OAuthClientRequest.tokenLocation(tokenEndPoint).setGrantType(GrantType.AUTHORIZATION_CODE)
 						                  .setClientId(clientId).setClientSecret(clientSecret)
 						                  .setRedirectURI(callbackUrl).setCode(code).buildBodyMessage();
-				// create OAuth client that uses custom http client under the hood
+				// Create OAuth client that uses custom http client under the hood
 				OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
 				OAuthClientResponse oAuthResponse;
 				oAuthResponse = oAuthClient.accessToken(accessRequest);
@@ -238,7 +248,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				if (StringUtils.isNotEmpty(accessToken)) {
 					Map<ClaimMapping, String> claims = buildClaims(oAuthResponse, authenticatorProperties);
 					if (claims != null && !claims.isEmpty()) {
-						//Find the subject from the IDP claim mapping, subject Claim URI.
+						// Find the subject from the IDP claim mapping, subject Claim URI.
 						String subjectFromClaims = FrameworkUtils
 								.getFederatedSubjectFromClaims(context.getExternalIdP().getIdentityProvider(), claims);
 						associateSubjectFromClaims(context, subjectFromClaims, claims);
@@ -333,9 +343,8 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	 * @param authenticatorProperties authenticatorProperties
 	 * @return claims
 	 */
-	private Map<ClaimMapping, String> buildClaims(OAuthClientResponse token,
-	                                              Map<String, String> authenticatorProperties)
-			throws ApplicationAuthenticatorException {
+	private Map<ClaimMapping, String> buildClaims(OAuthClientResponse token ,
+			Map<String, String> authenticatorProperties) throws ApplicationAuthenticatorException {
 		Map<ClaimMapping, String> claims = new HashMap<>();
 		String accessToken = token.getParam("access_token");
 		String url = getUserInfoEndpoint(token, authenticatorProperties);
@@ -376,7 +385,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	 */
 	private void associateSubjectFromClaims(AuthenticationContext context, String subjectFromClaims,
 	                                        Map<ClaimMapping, String> claims) {
-		//Use default claim URI on the Authenticator if claim mapping is not defined by the admin
+		// Use default claim URI on the Authenticator if claim mapping is not defined by the admin
 		if (StringUtils.isBlank(subjectFromClaims)) {
 			String userId =
 					PinterestAuthenticatorConstants.CLAIM_DIALECT_URI + "/" + PinterestAuthenticatorConstants.USER_ID;
@@ -391,5 +400,22 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				AuthenticatedUser.createFederateAuthenticatedUserFromSubjectIdentifier(subjectFromClaims);
 		context.setSubject(authenticatedUserObj);
 		authenticatedUserObj.setUserAttributes(claims);
+	}
+
+	/**
+	 * Handle error response when unauthorized the registered app.
+	 *
+	 * @param request httpServletRequest
+	 * @throws InvalidCredentialsException
+	 */
+	private void handleErrorResponse(HttpServletRequest request) throws InvalidCredentialsException {
+		StringBuilder errorMessage = new StringBuilder();
+		String state = request.getParameter(PinterestAuthenticatorConstants.OAUTH2_PARAM_STATE);
+		errorMessage.append(state);
+		if (log.isDebugEnabled()) {
+			log.debug("Failed to authenticate via pinterest when unauthorized the registered app. "
+							  + errorMessage.toString());
+		}
+		throw new InvalidCredentialsException(errorMessage.toString());
 	}
 }
