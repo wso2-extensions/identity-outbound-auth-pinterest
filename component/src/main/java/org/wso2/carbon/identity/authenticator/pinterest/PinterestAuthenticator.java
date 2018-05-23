@@ -62,7 +62,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Authenticator of Pinterest
+ * Authenticator of Pinterest.
+ * @since 1.0.0
  */
 public class PinterestAuthenticator extends OpenIDConnectAuthenticator implements FederatedApplicationAuthenticator {
 
