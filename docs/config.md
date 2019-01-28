@@ -207,6 +207,7 @@ Likewise, you can create the claims for all the public information of the Pinter
    [http://localhost:8080/travelocity.com](http://localhost:8080/travelocity.com)
    
    ![alt text](images/Pin11.png)
+      If you checkout from tag v5.7.0 when you downloading the sample then login with SAML(Redirect binding).
    
    2. Click the link to log in with SAML from the WSO2 Identity Server.
    
