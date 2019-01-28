@@ -46,7 +46,7 @@ This page provides instructions on how to configure the Pinterest authenticator 
 
    The next step is to deploy the travelocity.com sample app in order to use it in this scenario.
    
-   For more information on how to do this, see [Deploying travelocity.com sample app](https://docs.wso2.com/display/ISCONNECTORS/Deploying+the+Sample+App).
+   For more information on how to do this, see [Deploying travelocity.com sample app](sampleApp.md).
 
  ### Configuring the identity provider
  
