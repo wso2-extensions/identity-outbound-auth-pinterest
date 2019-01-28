@@ -47,6 +47,16 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.idp.mgt</artifactId>
             <version>${carbon.identity.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.rampart.wso2</groupId>
+                    <artifactId>rampart-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.rampart.wso2</groupId>
+                    <artifactId>rampart-trust</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -102,6 +112,20 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
             <version>${carbon.identity.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.rampart.wso2</groupId>
+                    <artifactId>rampart-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.rampart.wso2</groupId>
+                    <artifactId>rampart-policy</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.rampart.wso2</groupId>
+                    <artifactId>rampart-trust</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.oltu.oauth2</groupId>
@@ -132,6 +156,43 @@
             <groupId>org.json.wso2</groupId>
             <artifactId>json</artifactId>
             <version>${wso2.json}</version>
+        </dependency>
+        <!--Test Dependencies-->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <classifier>runtime</classifier>
+            <version>${jacoco.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
+            <version>${powermock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <classifier>runtime</classifier>
+            <scope>test</scope>
+            <version>${jacoco.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>test</scope>
+            <version>${slf4j.api.version}</version>
         </dependency>
     </dependencies>
     <scm>
@@ -339,5 +400,13 @@
         <identity.outbound.auth.oidc.import.version.range>[5.0.0, 6.0.0)</identity.outbound.auth.oidc.import.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <carbon.identity.framework.import.version.range>[5.0.0, 6.0.0)</carbon.identity.framework.import.version.range>
+        <log4j.version>1.2.13</log4j.version>
+        <!--Test Dependencies-->
+        <junit.version>4.12</junit.version>
+        <testng.version>6.9.10</testng.version>
+        <jacoco.version>0.7.9</jacoco.version>
+        <powermock.version>1.6.5</powermock.version>
+        <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
+        <slf4j.api.version>1.7.12</slf4j.api.version>
     </properties>
 </project>
