@@ -97,19 +97,19 @@ public class PinterestTest extends PowerMockTestCase {
         initMocks(this);
     }
 
-    @Test
+    @Test(description = "Test case for GetName")
     public void testGetName() {
         String name = pinterestAuthenticator.getName();
         Assert.assertEquals("Pinterest", name);
     }
 
-    @Test
+    @Test(description = "Test case for GetConfigurationProperties")
     public void testGetConfigurationProperties() {
         Assert.assertEquals(PinterestAuthenticatorConstants.CALLBACK_URL,
                 pinterestAuthenticator.getConfigurationProperties().get(2).getName());
     }
 
-    @Test
+    @Test(description = "Test case for GetFriendlyName")
     public void testGetFriendlyName() {
         Assert.assertEquals(PinterestAuthenticatorConstants.PINTEREST_CONNECTOR_FRIENDLY_NAME,
                 pinterestAuthenticator.getFriendlyName());
@@ -148,7 +148,8 @@ public class PinterestTest extends PowerMockTestCase {
 
     @Test(description = "Test case for RequiredIDToken")
     public void testRequiredIDToken() throws AuthenticationFailedException {
-        pinterestAuthenticator.initiateAuthenticationRequest(httpServletRequest, httpServletResponse, authenticationContext);
+        pinterestAuthenticator.
+                initiateAuthenticationRequest(httpServletRequest, httpServletResponse, authenticationContext);
         Assert.assertEquals(false, pinterestAuthenticator.requiredIDToken(authenticatorProperties));
     }
 
@@ -162,20 +163,21 @@ public class PinterestTest extends PowerMockTestCase {
         PowerMockito.when(httpServletRequest.getParameter(anyString())).thenReturn("method");
         context.setAuthenticatorProperties(authenticatorProperties);
         PowerMockito.mockStatic(OAuthAuthzResponse.class);
-        Mockito.when(OAuthAuthzResponse.oauthCodeAuthzResponse(Mockito.any(HttpServletRequest.class))).thenReturn(authAuthzResponse);
+        Mockito.when(OAuthAuthzResponse.oauthCodeAuthzResponse(Mockito.any(HttpServletRequest.class))).
+                thenReturn(authAuthzResponse);
         PowerMockito.mockStatic(OAuthClientRequest.class);
-        //PowerMockito.doReturn(authAuthzResponse).when(mockOAuthAuthzResponse," oauthCodeAuthzResponse",httpServletRequest);
-        Mockito.when(OAuthClientRequest.tokenLocation(Mockito.anyString())).thenReturn(new OAuthClientRequest.TokenRequestBuilder("https://api.pinterest.com/v1/oauth/token"));
+        Mockito.when(OAuthClientRequest.tokenLocation(Mockito.anyString())).thenReturn(new OAuthClientRequest.
+                TokenRequestBuilder("https://api.pinterest.com/v1/oauth/token"));
         PowerMockito.whenNew(OAuthClient.class).withAnyArguments().thenReturn(oAuthClient);
         Mockito.when(mockOAuthClient.accessToken(mockOAuthClientRequest)).thenReturn(oAuthJSONAccessTokenResponse);
-        Mockito.when(oAuthClient.accessToken(Mockito.any(OAuthClientRequest.class))).thenReturn(oAuthJSONAccessTokenResponse);
+        Mockito.when(oAuthClient.accessToken(Mockito.any(OAuthClientRequest.class))).
+                thenReturn(oAuthJSONAccessTokenResponse);
         spyAuthenticator.processAuthenticationResponse(httpServletRequest, httpServletResponse, context);
     }
 
     @Test(expectedExceptions = InvalidCredentialsException.class, description = "Negative test case for HandleErrorResponse")
     public void testHandleErrorResponse() throws Exception {
         Whitebox.invokeMethod(pinterestAuthenticator, "handleErrorResponse", httpServletRequest);
-
     }
 
     @Test(expectedExceptions = ApplicationAuthenticatorException.class, description = "Negative test case for BuildClaims")

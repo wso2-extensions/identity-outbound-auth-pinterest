@@ -35,7 +35,7 @@ Follow the instructions below to download a sample from GitHub.
     cd ..
     git checkout -b v5.4.0 v5.4.0
     ```
-* Go to is-samples/modules/samples/sso/sso-agent-sample directory and run `mvn clean install` and get the war file from the target folder.
+* Go to is-samples/modules/samples/sso/sso-agent-sample directory and run `mvn clean install` and get the travelocity.com.war file from the target folder.
 
 ### Deploy the sample web app
 
