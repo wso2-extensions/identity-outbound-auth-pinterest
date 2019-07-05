@@ -29,9 +29,9 @@ public class PinterestAuthenticatorConstants {
 
 	//Pinterest authorize endpoint URL.
 	public static final String PINTEREST_OAUTH_ENDPOINT = "https://api.pinterest.com/oauth/";
-	//office365 token  endpoint URL.
+	//Pinterest token  endpoint URL.
 	public static final String PINTEREST_TOKEN_ENDPOINT = "https://api.pinterest.com/v1/oauth/token";
-	//office365 user info endpoint URL.
+	//Pinterest user info endpoint URL.
 	public static final String PINTEREST_USERINFO_ENDPOINT = "https://api.pinterest.com/v1/me";
 	//Pinterest connector friendly name.
 	public static final String PINTEREST_CONNECTOR_FRIENDLY_NAME = "Pinterest Authenticator";

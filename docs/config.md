@@ -46,7 +46,7 @@ This page provides instructions on how to configure the Pinterest authenticator 
 
    The next step is to deploy the travelocity.com sample app in order to use it in this scenario.
    
-   For more information on how to do this, see [Deploying travelocity.com sample app](https://docs.wso2.com/display/ISCONNECTORS/Deploying+the+Sample+App).
+   For more information on how to do this, see [Deploying travelocity.com sample app](sampleApp.md).
 
  ### Configuring the identity provider
  
@@ -207,6 +207,7 @@ Likewise, you can create the claims for all the public information of the Pinter
    [http://localhost:8080/travelocity.com](http://localhost:8080/travelocity.com)
    
    ![alt text](images/Pin11.png)
+      If you checkout from tag v5.7.0 when you downloading the sample then login with SAML(Redirect binding).
    
    2. Click the link to log in with SAML from the WSO2 Identity Server.
    
