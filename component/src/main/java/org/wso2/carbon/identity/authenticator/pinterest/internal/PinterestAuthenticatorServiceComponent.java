@@ -32,7 +32,7 @@ import java.util.Hashtable;
  */
 public class PinterestAuthenticatorServiceComponent {
 
-    private static Log log = LogFactory.getLog(PinterestAuthenticatorServiceComponent.class);
+    private static final Log log = LogFactory.getLog(PinterestAuthenticatorServiceComponent.class);
 
     /**
      * This method is to register the Pinterest authenticator service.

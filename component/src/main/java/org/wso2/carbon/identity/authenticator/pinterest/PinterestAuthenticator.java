@@ -66,7 +66,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class PinterestAuthenticator extends OpenIDConnectAuthenticator implements FederatedApplicationAuthenticator {
 
-	private static Log log = LogFactory.getLog(PinterestAuthenticator.class);
+	private static final Log log = LogFactory.getLog(PinterestAuthenticator.class);
 
 	/**
 	 * This method is to check weather user can process or not.
