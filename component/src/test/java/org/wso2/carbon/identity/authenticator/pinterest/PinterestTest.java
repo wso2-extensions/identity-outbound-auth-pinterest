@@ -18,8 +18,6 @@
  */
 package org.wso2.carbon.identity.authenticator.pinterest;
 
-import static org.mockito.Matchers.anyString;
-
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAuthzResponse;
@@ -45,9 +43,8 @@ import org.wso2.carbon.identity.application.authentication.framework.exception.A
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
 import org.wso2.carbon.identity.application.authentication.framework.exception.InvalidCredentialsException;
 import org.wso2.carbon.identity.application.authenticator.oidc.OIDCAuthenticatorConstants;
+import org.wso2.carbon.identity.application.common.model.ClaimMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.net.HttpURLConnection;
@@ -55,20 +52,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import org.wso2.carbon.identity.application.common.model.ClaimMapping;
+import static org.mockito.Matchers.anyString;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({OAuthAuthzResponse.class, OAuthClientRequest.class})
 public class PinterestTest extends PowerMockTestCase {
-
-    @ObjectFactory
-    public IObjectFactory getObjectFactory() {
-
-        return new org.powermock.modules.testng.PowerMockObjectFactory();
-    }
 
     private PinterestAuthenticator pinterestAuthenticator;
     @Mock
@@ -98,6 +90,11 @@ public class PinterestTest extends PowerMockTestCase {
 
     @Spy
     private AuthenticationContext context = new AuthenticationContext();
+
+    @ObjectFactory
+    public IObjectFactory getObjectFactory() {
+        return new org.powermock.modules.testng.PowerMockObjectFactory();
+    }
 
     @DataProvider
     public Object[][] getAuthenticatorPropertiesData() {
