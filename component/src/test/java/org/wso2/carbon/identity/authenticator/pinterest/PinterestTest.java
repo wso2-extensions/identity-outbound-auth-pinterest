@@ -182,7 +182,7 @@ public class PinterestTest extends PowerMockTestCase {
                 thenReturn(authAuthzResponse);
         PowerMockito.mockStatic(OAuthClientRequest.class);
         Mockito.when(OAuthClientRequest.tokenLocation(Mockito.anyString())).thenReturn(new OAuthClientRequest.
-                TokenRequestBuilder("https://api.pinterest.com/v1/oauth/token"));
+                TokenRequestBuilder("https://api.pinterest.com/v5/oauth/token"));
         PowerMockito.whenNew(OAuthClient.class).withAnyArguments().thenReturn(oAuthClient);
         Mockito.when(mockOAuthClient.accessToken(mockOAuthClientRequest)).thenReturn(oAuthJSONAccessTokenResponse);
         Mockito.when(oAuthClient.accessToken(Mockito.any(OAuthClientRequest.class))).

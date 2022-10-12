@@ -28,11 +28,11 @@ public class PinterestAuthenticatorConstants {
 	}
 
 	//Pinterest authorize endpoint URL.
-	public static final String PINTEREST_OAUTH_ENDPOINT = "https://api.pinterest.com/oauth/";
+	public static final String PINTEREST_OAUTH_ENDPOINT = "https://www.pinterest.com/oauth/";
 	//Pinterest token  endpoint URL.
-	public static final String PINTEREST_TOKEN_ENDPOINT = "https://api.pinterest.com/v1/oauth/token";
+	public static final String PINTEREST_TOKEN_ENDPOINT = "https://api.pinterest.com/v5/oauth/token";
 	//Pinterest user info endpoint URL.
-	public static final String PINTEREST_USERINFO_ENDPOINT = "https://api.pinterest.com/v1/me";
+	public static final String PINTEREST_USERINFO_ENDPOINT = "https://api.pinterest.com/v5/user_account";
 	//Pinterest connector friendly name.
 	public static final String PINTEREST_CONNECTOR_FRIENDLY_NAME = "Pinterest Authenticator";
 	//Pinterest connector name.
@@ -49,12 +49,12 @@ public class PinterestAuthenticatorConstants {
 	public static final String CLIENT_SECRET = "Client Secret";
 	//The reply URL of the application.
 	public static final String CALLBACK_URL = "callbackUrl";
-	//The ID of the user.
-	public static final String USER_ID = "id";
+	//username of the user.
+	public static final String USERNAME = "username";
 	//The claim dialect uri.
 	public static final String CLAIM_DIALECT_URI = "http://wso2.org/pinterest/claims";
 	//A comma-separated list of permission scopes
-	public static final String PINTEREST_BASIC_SCOPE = "read_public,write_public";
+	public static final String PINTEREST_BASIC_SCOPE = "user_accounts:read";
 	//The Http get method
 	public static final String HTTP_GET_METHOD = "GET";
 	//Root element of the json response
