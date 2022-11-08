@@ -53,7 +53,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -230,6 +232,8 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			Map<String, String> authenticatorProperties = context.getAuthenticatorProperties();
 			String clientId = authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_ID);
 			String clientSecret = authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_SECRET);
+			byte[] encodedConsumerAuth = Base64.getEncoder()
+					.encode((clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8));
 			String tokenEndPoint = getTokenEndpoint(authenticatorProperties);
 			String callbackUrl = getCallbackUrl(authenticatorProperties);
 			OAuthAuthzResponse authzResponse = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
@@ -238,8 +242,10 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			try {
 				accessRequest =
 						OAuthClientRequest.tokenLocation(tokenEndPoint).setGrantType(GrantType.AUTHORIZATION_CODE)
-						                  .setClientId(clientId).setClientSecret(clientSecret)
 						                  .setRedirectURI(callbackUrl).setCode(code).buildBodyMessage();
+
+				accessRequest.setHeader("Authorization", "Basic " + new String(encodedConsumerAuth, StandardCharsets.UTF_8));
+
 				// Create OAuth client that uses custom http client under the hood
 				OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
 				OAuthClientResponse oAuthResponse;
@@ -285,12 +291,15 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 		BufferedReader bufferedReader = null;
 		HttpURLConnection httpConnection = null;
 		JSONObject jsonObj = null;
+
 		try {
-			URL obj = new URL(url + "?" + PinterestAuthenticatorConstants.ACCESS_TOKEN + "=" + accessToken);
+			URL obj = new URL(url);
 			URLConnection connection = obj.openConnection();
+
 			// Cast to a HttpURLConnection
 			if (connection instanceof HttpURLConnection) {
 				httpConnection = (HttpURLConnection) connection;
+				httpConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
 				httpConnection.setConnectTimeout(PinterestAuthenticatorConstants.CONNECTION_TIMEOUT_VALUE);
 				httpConnection.setReadTimeout(PinterestAuthenticatorConstants.READ_TIMEOUT_VALUE);
 				httpConnection.setRequestMethod(PinterestAuthenticatorConstants.HTTP_GET_METHOD);
@@ -357,11 +366,10 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 				}
 				return claims;
 			}
-			JSONObject userData = json.getJSONObject(PinterestAuthenticatorConstants.ROOT_ELEMENT);
-			Iterator<?> keys = userData.keys();
+			Iterator<?> keys = json.keys();
 			while( keys.hasNext() ){
 				String key = (String)keys.next();
-				String value = userData.getString(key);
+				String value = json.getString(key);
 				String claimUri = PinterestAuthenticatorConstants.CLAIM_DIALECT_URI + "/" + key;
 				ClaimMapping claimMapping = new ClaimMapping();
 				Claim claim = new Claim();
@@ -388,7 +396,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 		// Use default claim URI on the Authenticator if claim mapping is not defined by the admin
 		if (StringUtils.isBlank(subjectFromClaims)) {
 			String userId =
-					PinterestAuthenticatorConstants.CLAIM_DIALECT_URI + "/" + PinterestAuthenticatorConstants.USER_ID;
+					PinterestAuthenticatorConstants.CLAIM_DIALECT_URI + "/" + PinterestAuthenticatorConstants.USERNAME;
 			ClaimMapping claimMapping = new ClaimMapping();
 			Claim claim = new Claim();
 			claim.setClaimUri(userId);
