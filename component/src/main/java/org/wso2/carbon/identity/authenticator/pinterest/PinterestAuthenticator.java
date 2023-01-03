@@ -174,7 +174,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	 * @param request  the http request
 	 * @param response the http response
 	 * @param context  the authentication context
-	 * @throws AuthenticationFailedException
+	 * @throws AuthenticationFailedException If the operation failed.
 	 */
 	@Override
 	protected void initiateAuthenticationRequest(HttpServletRequest request, HttpServletResponse response,
@@ -220,7 +220,7 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 	 * @param request  the http request
 	 * @param response the http response
 	 * @param context  the authentication context
-	 * @throws AuthenticationFailedException
+	 * @throws AuthenticationFailedException If the operation failed.
 	 */
 	@Override
 	protected void processAuthenticationResponse(HttpServletRequest request, HttpServletResponse response,
