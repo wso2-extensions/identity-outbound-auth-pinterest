@@ -22,7 +22,9 @@ package org.wso2.carbon.identity.authenticator.pinterest.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.authenticator.pinterest.PinterestAuthenticator;
 
@@ -40,6 +42,7 @@ public class PinterestAuthenticatorServiceComponent {
      *
      * @param componentContext the Component Context
      */
+    @Activate
     protected void activate(ComponentContext componentContext) {
         PinterestAuthenticator authenticator = new PinterestAuthenticator();
         Hashtable<String, String> props = new Hashtable<>();
@@ -55,6 +58,7 @@ public class PinterestAuthenticatorServiceComponent {
      *
      * @param componentContext the Component Context
      */
+    @Deactivate
     protected void deactivate(ComponentContext componentContext) {
         if (log.isDebugEnabled()) {
             log.debug("Pinterest authenticator is deactivated");
