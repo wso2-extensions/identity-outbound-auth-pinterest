@@ -22,14 +22,15 @@ package org.wso2.carbon.identity.authenticator.pinterest.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.authenticator.pinterest.PinterestAuthenticator;
 
 import java.util.Hashtable;
 
-/**
- * @scr.component name="identity.application.authenticator.pinterest.component" immediate="true"
- */
+@Component(
+        name="identity.application.authenticator.pinterest.component",
+        immediate=true)
 public class PinterestAuthenticatorServiceComponent {
 
     private static final Log log = LogFactory.getLog(PinterestAuthenticatorServiceComponent.class);
