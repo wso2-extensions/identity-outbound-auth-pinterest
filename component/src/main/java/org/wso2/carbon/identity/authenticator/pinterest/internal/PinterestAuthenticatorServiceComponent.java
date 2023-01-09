@@ -32,7 +32,7 @@ import java.util.Hashtable;
 
 @Component(
         name="identity.application.authenticator.pinterest.component",
-        immediate=true)
+        immediate= true)
 public class PinterestAuthenticatorServiceComponent {
 
     private static final Log log = LogFactory.getLog(PinterestAuthenticatorServiceComponent.class);
