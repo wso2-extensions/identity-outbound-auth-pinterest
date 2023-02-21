@@ -244,7 +244,9 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 						OAuthClientRequest.tokenLocation(tokenEndPoint).setGrantType(GrantType.AUTHORIZATION_CODE)
 						                  .setRedirectURI(callbackUrl).setCode(code).buildBodyMessage();
 
-				accessRequest.setHeader("Authorization", "Basic " + new String(encodedConsumerAuth, StandardCharsets.UTF_8));
+				accessRequest.setHeader(PinterestAuthenticatorConstants.AUTHORIZATION,
+						PinterestAuthenticatorConstants.AUTHENTICATION_BASIC +
+						new String(encodedConsumerAuth, StandardCharsets.UTF_8));
 
 				// Create OAuth client that uses custom http client under the hood
 				OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
@@ -299,7 +301,8 @@ public class PinterestAuthenticator extends OpenIDConnectAuthenticator implement
 			// Cast to a HttpURLConnection
 			if (connection instanceof HttpURLConnection) {
 				httpConnection = (HttpURLConnection) connection;
-				httpConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+				httpConnection.setRequestProperty(PinterestAuthenticatorConstants.AUTHORIZATION,
+						PinterestAuthenticatorConstants.AUTHENTICATION_BEARER + accessToken);
 				httpConnection.setConnectTimeout(PinterestAuthenticatorConstants.CONNECTION_TIMEOUT_VALUE);
 				httpConnection.setReadTimeout(PinterestAuthenticatorConstants.READ_TIMEOUT_VALUE);
 				httpConnection.setRequestMethod(PinterestAuthenticatorConstants.HTTP_GET_METHOD);

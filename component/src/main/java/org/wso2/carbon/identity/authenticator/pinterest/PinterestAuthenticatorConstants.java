@@ -63,4 +63,7 @@ public class PinterestAuthenticatorConstants {
 	public static final int CONNECTION_TIMEOUT_VALUE = 15000;
 	//Constant for read time out
 	public static final int READ_TIMEOUT_VALUE = 15000;
+	public static final String AUTHORIZATION = "Authorization";
+	public static final String AUTHENTICATION_BEARER = "Bearer ";
+	public static final String AUTHENTICATION_BASIC = "Basic ";
 }
