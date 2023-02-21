@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.pinterest</groupId>
     <artifactId>identity-outbound-auth-pinterest</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon Extension - pinterest Pom</name>
     <url>http://wso2.org</url>
@@ -205,7 +205,7 @@
         <developerConnection>
             scm:git:https://github.com/wso2-extensions/identity-outbound-auth-pinterest.git
         </developerConnection>
-        <tag>v1.0.2</tag>
+        <tag>HEAD</tag>
     </scm>
     <build>
         <extensions>
