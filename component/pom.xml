@@ -39,7 +39,8 @@
                         <Import-Package>
                             org.apache.commons.logging.*;version="${commons-logging.osgi.version.range}",
                             org.osgi.framework,
-                            org.wso2.carbon.identity.application.authentication.framework.*,
+                            org.wso2.carbon.identity.application.authentication.framework.*;
+                            version="${carbon.identity.framework.import.version.range}",
                             javax.servlet,
                             javax.servlet.http,
                             org.apache.oltu.oauth2.*;version="${oltu.package.import.version.range}",

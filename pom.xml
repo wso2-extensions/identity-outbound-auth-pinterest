@@ -339,7 +339,7 @@
         <commons-lang.osgi.version.range>[2.6,3)</commons-lang.osgi.version.range>
         <identity.outbound.auth.oidc.import.version.range>[5.0.0, 6.0.0)</identity.outbound.auth.oidc.import.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
-        <carbon.identity.framework.import.version.range>[5.0.0, 6.0.0)</carbon.identity.framework.import.version.range>
+        <carbon.identity.framework.import.version.range>[5.0.0, 8.0.0)</carbon.identity.framework.import.version.range>
         <log4j.version>1.2.13</log4j.version>
         <!--Test Dependencies-->
         <junit.version>4.12</junit.version>
