@@ -1,0 +1,17 @@
+{
+    "name": "Pinterest Authenticator",
+    "owner": "WSO2",
+    "category": "Federated authenticator",
+    "documentationUrl": "https://github.com/wso2-extensions/identity-outbound-auth-pinterest/tree/master/docs",
+    "description": "The Pinterest authenticator allows you to authenticate users using Pinterest through the WSO2 Identity Server. Pinterest is a social network that allows users to visually share, and discover new interests by posting images or videos to their own or others' boards and browsing what other users have pinned.",
+    "status": "Active",
+    "labels": ["SocialLogin"],
+    "releases": [
+        {
+            "tagName": "1.0.1",
+            "products": [
+                "IS 6.0.0"
+            ]
+        }
+    ]
+}
